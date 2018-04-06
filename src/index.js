@@ -10,14 +10,32 @@ ws.addEventListener('open', event => {
 ws.addEventListener('message', event => {
   const reader = new FileReader()
   reader.onload = () => {
-    const repEcho = Message.RepEcho.deserializeBinary(new Uint8Array(reader.result))
-    console.log(repEcho.getMessage())
+    const res = Message.Response.deserializeBinary(new Uint8Array(reader.result))
+    switch (res.getKindCase()) {
+      case 1: {
+        console.log(`echo response: ${res.getEchoresponse().getMessage()}`)
+        break
+      }
+      case 2: {
+        console.log(`time response: ${new Date(res.getTimeresponse().getTime())}`)
+        break
+      }
+    }
   }
   reader.readAsArrayBuffer(event.data)
 })
 
 document.getElementById('button').addEventListener('click', event => {
-  const reqEcho = new Message.ReqEcho()
-  reqEcho.setMessage('clicked')
-  ws.send(reqEcho.serializeBinary())
+  const echoReq = new Message.EchoRequest()
+  echoReq.setMessage('clicked')
+  const req = new Message.Request()
+  req.setEchorequest(echoReq)
+  ws.send(req.serializeBinary())
+})
+
+document.getElementById('timeButton').addEventListener('click', event => {
+  const timeReq = new Message.TimeRequest()
+  const req = new Message.Request()
+  req.setTimerequest(timeReq)
+  ws.send(req.serializeBinary())
 })

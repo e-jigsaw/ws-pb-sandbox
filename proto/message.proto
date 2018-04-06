@@ -3,22 +3,34 @@ syntax = "proto3";
 package proto;
 
 service Greeter {
-  rpc Echo (ReqEcho) returns (RepEcho){}
-  rpc GetUsers (ReqGetUsers) returns (RepGetUsers){}
+  rpc Op (Request) returns (Response){}
 }
 
-message ReqEcho {
+message Request {
+  oneof kind {
+    EchoRequest echoRequest = 1;
+    TimeRequest timeRequest = 2;
+  }
+}
+
+message Response {
+  oneof kind {
+    EchoResponse echoResponse = 1;
+    TimeResponse timeResponse = 2;
+  }
+}
+
+message EchoRequest {
   string message = 1;
 }
 
-message RepEcho {
+message EchoResponse {
   string message = 1;
 }
 
-message ReqGetUsers {
-  string name = 1;
+message TimeRequest {
 }
 
-message RepGetUsers {
-  string name = 1;
+message TimeResponse {
+  uint64 time = 1;
 }
