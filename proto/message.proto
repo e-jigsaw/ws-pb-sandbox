@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package proto;
+
+service Greeter {
+  rpc Echo (ReqEcho) returns (RepEcho){}
+  rpc GetUsers (ReqGetUsers) returns (RepGetUsers){}
+}
+
+message ReqEcho {
+  string message = 1;
+}
+
+message RepEcho {
+  string message = 1;
+}
+
+message ReqGetUsers {
+  string name = 1;
+}
+
+message RepGetUsers {
+  string name = 1;
+}
